@@ -5,7 +5,7 @@ This repository provides an implementation of the "Bayesian Subset Simulation"
 
 Julien Bect, Ling Li & Emmanuel Vazquez  
 _Bayesian Subset Simulation_  
-[arXiv:1601.02557v1](http://arxiv.org/abs/1601.02557   "arXiv:1601.02557v1")
+[arXiv:1601.02557](http://arxiv.org/abs/1601.02557   "arXiv:1601.02557")
 
 It is currently in a very preliminary form.
 After some polishing, it will (sooner or later) become
@@ -19,36 +19,29 @@ You need an interpreter of the Matlab/Octave langage, that is, either
 Mathworks's [Matlab](http://www.mathworks.com/products/matlab/ "Matlab") or
 [GNU Octave](https://www.gnu.org/software/octave/ "GNU Octave").
 
-The result presented in arXiv:1601.02557v1 were obtained using Matlab R2014b.
+The result presented in arXiv:1601.02557 were obtained using Matlab R2014b.
 Please report any problem with other versions of Matlab or with Octave.
 Since BSS is meant to become part of the STK toolbox, it should ideally run with
-Matlab >=R2007a and Octave >=3.2.2 (those are the current requirements indicated
+Matlab >=R2007a and Octave >=3.2.4 (those are the current requirements indicated
 in STK's README). Right now, it probably doesn't...
-
-You will also need a development version of the STK toolbox (since the latest
-public release of STK, which is 2.3.4, does not contain the `stk_pmisclass`
-function that we use in BSS).  You can obtain it using Mercurial or by
-downloading a snapshot of the default branch (see below).
 
 
 ## Installation
 
  1. Clone the BSS repository wherever you like:
 
-        git clone https://github.com/jbect/bss.git bss
-        
-   (or download and unpack a zip [snapshot of the
-    repo](https://github.com/jbect/bss/archive/master.zip
-    "Download a snapshot of BSS's master branch")).
+        git clone git://git.code.sf.net/p/kriging/contrib-bss bss
 
- 2. Clone STK's default branch inside it:
+   (or download and unpack a zip snapshot of the repo using
+    the "Download Snapshot" link on this page:
+	[https://sourceforge.net/p/kriging/contrib-bss].
 
-        cd bss
-        hg clone http://hg.code.sf.net/p/kriging/hg stk
-        
-   (or download and unpack a tarball [snapshot of the
-   repo](https://sourceforge.net/p/kriging/hg/ci/default/tarball
-   "Download a snapshot of STK's default branch")).
+ 2. [Download](https://sourceforge.net/projects/kriging/files/stk/ "Download")
+    and unpack STK 2.4.0 (or any later version) in `bss/stk`. If you don't
+	know which tarball to pick, `stk-*-allpurpose.tar.gz` is the one you're
+	looking for.  Alternatively, Octave users can prefer to install stk
+	as a regular Octave package (`pkg install -forge stk`), in which case
+	`bss_init.m` must be slightly modified.
 
  3. Start Matlab or Octave and then type
 
@@ -78,7 +71,7 @@ The ratios reported in the last column should be reasonably close to one.
 
 ## Licence
 
-Copyright (C) 2016 CentraleSupelec
+Copyright (C) 2016, 2017 CentraleSupelec
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
