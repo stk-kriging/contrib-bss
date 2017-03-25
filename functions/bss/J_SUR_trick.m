@@ -1,6 +1,6 @@
 % Copyright Notice
 %
-%    Copyright (C) 2016 CentraleSupelec
+%    Copyright (C) 2016, 2017 CentraleSupelec
 %
 %    Authors:  Julien Bect       <julien.bect@centralesupelec.fr>
 %              Ling Li           <ling.li.supelec@gmail.com>
@@ -117,9 +117,13 @@ for k = 1:ns
     % that have not been selected
     p_expected = p_current;
     
-    % Compute the pointwise criterion (integrand)
-    p_expected(is(idx00)) = stk_pmisclass (threshold, ...
-        ys00_pred, Kpost_ys00_ynew, Kpost_ynew_ynew);
+    if Kpost_ynew_ynew > 0
+        
+        % Compute the pointwise criterion (integrand)
+        p_expected(is(idx00)) = stk_pmisclass (threshold, ...
+            ys00_pred, Kpost_ys00_ynew, Kpost_ynew_ynew);
+        
+    end % if  (otherwise: numerical inaccuracy, assume Kpost_ynew_ynew  = 0)
     
     % Compute the SUR criterion for the k^th candidate point
     if isempty (w)
@@ -128,7 +132,7 @@ for k = 1:ns
         J(is(k)) = sum (w .* p_expected);
     end
     
-    if isnan (J(is(k))),
+    if isnan (J(is(k)))
         warning ('Failed to compute a value of the SUR criterion (--> NaN).');
     end
 end
