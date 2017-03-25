@@ -4,7 +4,7 @@
 
 % Copyright Notice
 %
-%    Copyright (C) 2016 CentraleSupelec
+%    Copyright (C) 2016, 2017 CentraleSupelec
 %
 %    Author:  Julien Bect  <julien.bect@centralesupelec.fr>
 %
@@ -40,9 +40,9 @@ clear all; close all; clc
 
 result = struct();
 
-LIST_CASES = [1:4 6 101 201:203];
+LIST_CASES = [1:4 6 101 201:204];
 
-for k = 1:length(LIST_CASES),
+for k = 1:length(LIST_CASES)
     
     tic;
     

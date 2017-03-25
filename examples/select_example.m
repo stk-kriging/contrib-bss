@@ -2,7 +2,7 @@
 
 % Copyright Notice
 %
-%    Copyright (C) 2016 CentraleSupelec
+%    Copyright (C) 2016, 2017 CentraleSupelec
 %
 %    Author:  Julien Bect  <julien.bect@centralesupelec.fr>
 %
@@ -132,7 +132,7 @@ switch CASE_NUM
         % Limit-state function
         LSS_expr = sprintf ('%.20e - f_fourbranch ([x1(:) x2(:)])', ...
             problem.u_final);
-                        
+        
         
     case 6 %--- 1D toy example ------------------------------------------------
         
@@ -183,10 +183,11 @@ switch CASE_NUM
         LSS_expr = 'x1(:) - x2(:)';
         
         
-    case {201, 202, 203} %--- Test scalar distrib ------------------------------
+    case {201, 202, 203, 204} %--- Test scalar distrib -------------------------
         
         % Test scalar distributions, with x -> x as a cost function.
-        % Teh threshold is chosen such that pf_ref = 1e-12;
+        % The threshold is chosen such that pf_ref = 1e-12
+        %   (except for the case of the uniform distribution, see below)
         
         pf_ref = 1e-12;
         
@@ -197,6 +198,14 @@ switch CASE_NUM
                 P = TruncatedNormalDistribution (10, 2, 9, inf);
             case 203
                 P = BetaDistribution (2, 5);
+            case 204
+                P = UniformDistribution (30, 40);
+                pf_ref = 1e-5;
+                % Note: trying to estimate a very small probability in this
+                % particular example leads to numerical inaccuracies in kriging
+                % predictions due to a *very* unbalanced design with an
+                % accumulation of design points next to the right extermity of
+                % the support.
         end
         
         name = sprintf ('2xx-%s', class (P));

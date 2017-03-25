@@ -49,9 +49,9 @@ options = struct(                       ...
 
 result = struct();
 
-LIST_CASES = [1:6 101];
+LIST_CASES = [1:4 6 101 201:204];
 
-for k = 1:length(LIST_CASES),
+for k = 1:length(LIST_CASES)
     
     tic;
     
