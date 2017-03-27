@@ -2,7 +2,7 @@
 
 % Copyright Notice
 %
-%    Copyright (C) 2016 CentraleSupelec
+%    Copyright (C) 2016, 2017 CentraleSupelec
 %
 %    Authors:  Julien Bect       <julien.bect@centralesupelec.fr>
 %              Ling Li           <ling.li.supelec@gmail.com>
@@ -65,7 +65,7 @@ Pf_target = Pf_base * estim_ratio;
 
 % visu AFTER choosing a target threshold
 bss_figure(21, options.figs, xt, [], [], [stage_data(1:stage-1).u_target], ...
-    u_target, problem, stage, Pf_target); drawnow; ax = axis();
+    u_target, problem, stage, Pf_target);  drawnow;
 
 fprintf('>>>>> estim_ratio = %.5f\n', estim_ratio);
 fprintf('>>>>> Pf_target = %.5f\n', Pf_target);
@@ -84,7 +84,7 @@ xt = replicate_particles (xt, nb_replicates);
 
 % visu AFTER resampling (killing !)
 bss_figure(21, options.figs, xt, [], [], [stage_data(1:stage-1).u_target], ...
-    u_target, problem, stage, Pf_target, ax); drawnow;
+    u_target, problem, stage, Pf_target);  drawnow;
 
 [mcs, accept_rate, sig_RW] = bss_move ...
     (xt, [], [], u_target, options, problem, sig_RW);
