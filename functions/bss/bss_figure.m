@@ -1,6 +1,6 @@
 % Copyright Notice
 %
-%    Copyright (C) 2016 CentraleSupelec
+%    Copyright (C) 2016, 2017 CentraleSupelec
 %
 %    Authors:  Julien Bect       <julien.bect@centralesupelec.fr>
 %              Ling Li           <ling.li.supelec@gmail.com>
@@ -651,7 +651,7 @@ eval(sprintf('figure%2d(varargin{:})', fignum));
     end % function figure29
 
 
-% FIGURE 50 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIGURE 50 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     function figure50(stage_history)
     
@@ -695,3 +695,24 @@ eval(sprintf('figure%2d(varargin{:})', fignum));
 %     end % function figure30
 
 end % function
+
+
+% raise_fig %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function raise_fig (fignum, flag_dock)
+
+try
+    set (0, 'CurrentFigure', fignum);
+catch
+    figure (fignum);
+end
+
+if (nargin == 2) && flag_dock
+    set (gcf, 'WindowStyle', 'docked');
+end
+
+BACKGROUND_COLOR = 0.98 * [1 1 1];
+set (gca, 'Color', BACKGROUND_COLOR)
+set (gcf, 'Color', BACKGROUND_COLOR)
+
+end
