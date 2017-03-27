@@ -2,7 +2,7 @@
 
 % Copyright Notice
 %
-%    Copyright (C) 2016 CentraleSupelec
+%    Copyright (C) 2016, 2017 CentraleSupelec
 %
 %    Authors:  Julien Bect       <julien.bect@centralesupelec.fr>
 %              Ling Li           <ling.li.supelec@gmail.com>
@@ -142,8 +142,14 @@ if (~ isfield (mh, 'target_rate')) || (isempty (mh.target_rate))
 end
 
 % Adapt: Initial increment/decrement (on a log scale)
-if (~ isfield (mh, 'delta_init')) || (isempty (mh.delta_init))
-    mh.delta_init = log (2);
+if (~ isfield (mh, 'delta_init')) || (isempty (mh.delta_init))    
+    % Note: the value mh.delta_init = log (2) was used for the simulations
+    % presented in arXiv:1601.02557, but is too small to be a good
+    % recommendation for a default value.  Indeed, with 10 steps of adaptation,
+    % it lead to a maximal adaptation factor of approximately 7.6.  We recommend
+    % log (10) instead, which corresponds to a maximal adaptation factor of
+    % approximately 850. 
+    mh.delta_init = log (10);
 end
 
 end % function get_default_MH_options
