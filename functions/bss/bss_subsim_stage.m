@@ -68,7 +68,7 @@ bss_figure(21, options.figs, xt, [], [], [stage_data(1:stage-1).u_target], ...
     u_target, problem, stage, Pf_target);  drawnow;
 
 fprintf('>>>>> estim_ratio = %.5f\n', estim_ratio);
-fprintf('>>>>> Pf_target = %.5f\n', Pf_target);
+fprintf('>>>>> Pf_target = %.5e\n', Pf_target);
 
 % save stage results
 stage_data(stage).estim_ratio = estim_ratio;

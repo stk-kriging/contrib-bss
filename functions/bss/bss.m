@@ -471,7 +471,7 @@ estim_ratio = mean(ggg ./ gx);
 Pf_target = Pf_base * estim_ratio;
 
 fprintf('>>> estim_ratio = %.5f\n', estim_ratio);
-fprintf('>>> Pf_target = %.5f\n', Pf_target);
+fprintf('>>> Pf_target = %.5e\n', Pf_target);
 
 % save stage results
 stage_data(stage).estim_ratio = estim_ratio;
