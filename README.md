@@ -36,7 +36,7 @@ in STK's README). Right now, it probably doesn't...
 
         git clone git@github.com:stk-kriging/contrib-bss.git bss
 
-   (or [download](https://github.com/stk-kriging/contrib-bss/archive/refs/heads/main.zip)
+    (or [download](https://github.com/stk-kriging/contrib-bss/archive/refs/heads/main.zip)
     and unpack a zip snapshot of the repo).
 
  2. [Download](https://github.com/stk-kriging/stk/releases)
