@@ -30,13 +30,12 @@ in STK's README). Right now, it probably doesn't...
 
  1. Clone the BSS repository wherever you like:
 
-        git clone git://git.code.sf.net/p/kriging/contrib-bss bss
+        git clone git@github.com:stk-kriging/contrib-bss.git bss
 
-   (or download and unpack a zip snapshot of the repo using
-    the "Download Snapshot" link on this page:
-	[https://sourceforge.net/p/kriging/contrib-bss].
+   (or [download](https://github.com/stk-kriging/contrib-bss/archive/refs/heads/main.zip)
+    and unpack a zip snapshot of the repo).
 
- 2. [Download](https://sourceforge.net/projects/kriging/files/stk/ "Download")
+ 2. [Download](https://github.com/stk-kriging/stk/releases)
     and unpack STK 2.4.0 (or any later version) in `bss/stk`. If you don't
 	know which tarball to pick, `stk-*-allpurpose.tar.gz` is the one you're
 	looking for.  Alternatively, Octave users can prefer to install stk
