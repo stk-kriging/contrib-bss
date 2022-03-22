@@ -21,10 +21,12 @@ You need an interpreter of the Matlab/Octave langage, that is, either
 Mathworks's [Matlab](http://www.mathworks.com/products/matlab/ "Matlab") or
 [GNU Octave](https://www.gnu.org/software/octave/ "GNU Octave").
 
-The result presented in arXiv:1601.02557 were obtained using Matlab R2014b.
-Please report any problem with other versions of Matlab or with Octave.
+The result presented in the article were obtained in 2017 using Matlab R2014b
+and STK 2.4.0.  Please report any problem with other versions of Matlab or with
+Octave.
+
 Since BSS is meant to become part of the STK toolbox, it should ideally run with
-Matlab >=R2007a and Octave >=3.2.4 (those are the current requirements indicated
+Matlab >= R2009b and Octave >= 4.0.0 (those are the current requirements indicated
 in STK's README). Right now, it probably doesn't...
 
 
