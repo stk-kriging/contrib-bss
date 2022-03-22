@@ -68,6 +68,19 @@ The results are summarized at the end in a table that should look like this:
 The ratios reported in the last column should be reasonably close to one.
 
 
+## Repository
+
+The current home of BBS is on github:
+https://github.com/stk-kriging/contrib-bss
+
+A mirror in also maintained at Sourceforge:
+https://sourceforge.net/p/kriging/contrib-bss
+(this is the URL that was given in the published paper).
+
+Please use the github project if you want to fork BSS,
+report issues, or whatever.
+
+
 ## Licence
 
 Copyright (C) 2016, 2017 CentraleSupelec
