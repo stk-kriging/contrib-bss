@@ -5,9 +5,10 @@ This repository provides an implementation of the "Bayesian Subset Simulation"
 
 Julien Bect, Ling Li & Emmanuel Vazquez  
 _Bayesian Subset Simulation_  
-SIAM/ASA Journal on Uncertainty Quantification 5(1):762–786
-[DOI:10.1137/16M1078276](https://doi.org/10.1137/16M1078276)
-[arXiv:1601.02557](http://arxiv.org/abs/1601.02557)
+SIAM/ASA Journal on Uncertainty Quantification 5(1):762–786  
+[DOI:10.1137/16M1078276](https://doi.org/10.1137/16M1078276) /
+[arXiv:1601.02557](http://arxiv.org/abs/1601.02557) /
+[HAL:01253706](https://hal.archives-ouvertes.fr/hal-01253706)
 
 It is currently in a very preliminary form.
 After some polishing, it will (sooner or later) become
