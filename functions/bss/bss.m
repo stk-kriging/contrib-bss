@@ -91,8 +91,7 @@ if options.use_gp,  % Specific inits for bss
     obs = struct ('xi', x0, 'yi', y0);
     
     % Estimate covariance parameters on the initial dataset
-    model = options.model;
-    model.param = stk_param_estim (options.model, x0, y0);
+    model = stk_param_estim (options.model, x0, y0);
     
 elseif nargin > 2,
     
@@ -166,7 +165,7 @@ end
 
 if ~ options.update_inside_SUR_loop,
     % update parameters once, before entering the SUR loop
-    model.param = stk_param_estim (options.model, xi, yi);
+    model = stk_param_estim (options.model, xi, yi);
     % TODO: try several starting points ?
 end
 
@@ -407,7 +406,7 @@ while k < options.SUR.max_eval_per_stage,
     
     if options.update_inside_SUR_loop,
         % update parameters once, before entering the SUR loop
-        model.param = stk_param_estim (options.model, xi, yi);
+        model = stk_param_estim (options.model, xi, yi);
     end
     
     k = k + 1;
