@@ -108,7 +108,7 @@ eval(sprintf('figure%2d(varargin{:})', fignum));
     dx = (ax(2) - ax(1)) / sigma(1);
     dy = (ay(2) - ay(1)) / sigma(2);
     r = dy / dx;
-    if r > 1,
+    if r > 1
         ddx = (r - 1) * dx;
         ax = ax + 0.5 * ddx * sigma(1) * [-1 1];
     else
@@ -160,7 +160,7 @@ eval(sprintf('figure%2d(varargin{:})', fignum));
     pcolor (xg1, xg2, z);
     shading interp;
     
-    if (nargin >= 5) && (~ isempty (range)),
+    if (nargin >= 5) && (~ isempty (range))
         caxis (range);
     end
     
@@ -172,7 +172,7 @@ eval(sprintf('figure%2d(varargin{:})', fignum));
 
 % FIGURE 14 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    function figure14(varargin) %#ok<DEFNU>
+    function figure14(varargin)
     
     bss_raise_fig(14);
     figure_yp_yt(varargin{:});
@@ -197,8 +197,8 @@ eval(sprintf('figure%2d(varargin{:})', fignum));
         axis([ax ax]);
         plot([ax(1) u_target], u_target*[1 1], 'r--' );
         plot(u_target*[1 1], [ax(1) u_target], 'r--' );
-        if ~isempty(u_target_serie),
-            for j = 1:length(u_target_serie),
+        if ~isempty(u_target_serie)
+            for j = 1:length(u_target_serie)
                 plot([ax(1) u_target_serie(j)], ...
                     u_target_serie(j) * [1 1], 'g--' );
                 plot(u_target_serie(j) * [1 1], ...
@@ -215,7 +215,7 @@ eval(sprintf('figure%2d(varargin{:})', fignum));
 
 % FIGURE 15 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    function figure15(varargin) %#ok<DEFNU>
+    function figure15(varargin)
     
     bss_raise_fig(15);
     figure_pn_yt(varargin{:});
@@ -272,7 +272,7 @@ eval(sprintf('figure%2d(varargin{:})', fignum));
 
     function trace_contour_target_final(xg1, xg2, z, u_target, u_final)
     
-    if ~ isequal (u_target, u_final),
+    if ~ isequal (u_target, u_final)
         
         % Intermediate stage / target level
         [C, h] = contour (xg1, xg2, z, ...
@@ -341,7 +341,7 @@ eval(sprintf('figure%2d(varargin{:})', fignum));
     angle = linspace (0, 2 * pi, Q)';
     mu = mean (input_distrib);
     sigma = std (input_distrib);
-    for k = 1:30,
+    for k = 1:30
         proba = 10^(-k);
         R = sqrt (chi2inv (1 - proba, 2));
         xx = repmat (mu, Q, 1) ...
@@ -357,7 +357,7 @@ eval(sprintf('figure%2d(varargin{:})', fignum));
     
     nb_evals = size (xi, 1);
     
-    if export,  % do not display title
+    if export  % do not display title
         
         prefix = sprintf ('%s-fig%d-%d', ...
             fig_opts.save_prefix, fignum, stage);
@@ -594,7 +594,7 @@ eval(sprintf('figure%2d(varargin{:})', fignum));
     all_u = [stage_history.u_target(:); stage_history.u_final(:)];
     
     u_min = min(all_u); u_max = max(all_u); delta_u = u_max - u_min;
-    if delta_u > 0,
+    if delta_u > 0
         axis([xlim [u_min u_max] + delta_u * 0.05 * [-1 1]]);
     end
     

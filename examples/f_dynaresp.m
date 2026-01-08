@@ -33,25 +33,20 @@
 %
 %    License: CC0  <http://creativecommons.org/publicdomain/zero/1.0/>
 
-function z = f_dynaresp (varargin)
+function z = f_dynaresp (x1, x2, x3, x4, x5, x6)
 
 dim = 6;
 
-switch length(varargin)
-    case 1,
-        x = double(varargin{1});
-        if size(x, 2) ~= dim,
-            error('bouh');
-        end
-    case dim,
-        x = [];
-        for i = 1:dim,
-            xi = varargin{i};
-            x = [x xi(:)];
-        end
+switch nargin
+    case 1
+        x = x1;
+    case dim
+        x = [x1(:) x2(:) x3(:) x4(:) x5(:) x6(:)];
     otherwise
-        error('bouh');
+        error ('Incorrect number of input arguments');
 end
+
+assert (size(x, 2) ~= dim);
 
 M  = x(:, 1);
 C1 = x(:, 2);

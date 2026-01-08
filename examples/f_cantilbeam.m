@@ -33,29 +33,20 @@
 %
 %    License: CC0  <http://creativecommons.org/publicdomain/zero/1.0/>
 
-function z = f_cantilbeam (varargin)
+function z = f_cantilbeam (x1, x2)
 
-if nargin < 1,
-    error('Not enough input arguments.');
-end
-    
 dim = 2;
 
-switch length(varargin)
-    case 1,
-        x = double(varargin{1});
-        if size(x, 2) ~= dim,
-            error('bouh');
-        end
-    case dim,
-        x = [];
-        for i = 1:dim,
-            xi = varargin{i};
-            x = [x xi(:)];
-        end
+switch nargin
+    case 1
+        x = x1;
+    case dim
+        x = [x1(:) x2(:)];
     otherwise
-        error('bouh');
+        error ('Incorrect number of input arguments');
 end
+
+assert (size(x, 2) ~= dim);
 
 if any(x(:, 1) < 0)
     error('X1 should be >= 0.');

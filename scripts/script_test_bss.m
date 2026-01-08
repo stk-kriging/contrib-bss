@@ -67,7 +67,7 @@ end
 
 fprintf('\n\nSUMMARY\n=======\n\n');
 
-for k = 1:length(LIST_CASES),
+for k = 1:length(LIST_CASES)
     
     fprintf('case #%03d:  ', LIST_CASES(k));
     fprintf('DIM=%d  ', result(k).problem.dim);
