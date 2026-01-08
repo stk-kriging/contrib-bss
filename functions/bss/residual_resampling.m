@@ -45,7 +45,7 @@ w = w / S;
 m_in = numel (w);
 
 % Output sample size
-if nargin < 2,
+if nargin < 2
     m_out = m_in;
 end
 

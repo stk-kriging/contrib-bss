@@ -77,13 +77,13 @@ cwp_sort = cumsum (wp_sort);
 m0 = min (SUR_params.m0_max, ...
     find (cwp_sort >= SUR_params.frac * cwp_sort(end), 1, 'first'));
 if (m0 > 10000)
-    error (sprintf ('m0=%d: TOO LARGE :!!!', m0));
+    error (sprintf ('m0=%d: TOO LARGE :!!!', m0));  %#ok<SPERR>
 end
 is = is(1:m0);
 ns = length (is);
 
 % Stop if there is no candidate point with a positive variance
-if ns == 0,
+if ns == 0
     stop_flag = 2;
     return;
 end

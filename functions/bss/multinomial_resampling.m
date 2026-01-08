@@ -45,7 +45,7 @@ w = w / S;
 m_in = numel (w);
 
 % Output sample size
-if nargin < 2,
+if nargin < 2
     % Default: same as input sample size
     m_out = m_in;
 end
@@ -69,14 +69,14 @@ k1 = 1; j = 1;
 while k1 <= m_out
     
     % Find in which cell the first "u" lies
-    while u(k1) > tR(j),
+    while u(k1) > tR(j)
         j = j + 1;
     end
     %j = find((us(k1) > tL) & (us(k1) <= tR), 1, 'first');
     
     % Find all the others u's in the same cell
     k2 = k1;
-    while (k2 < m_out) && (u(k2 + 1) <= tR(j)),
+    while (k2 < m_out) && (u(k2 + 1) <= tR(j))
         k2 = k2 + 1;
     end
     %k2 = find((us > tL(j)) & (us <= tR(j)), 1, 'last');
