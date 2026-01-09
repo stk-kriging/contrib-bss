@@ -53,14 +53,14 @@ theta = 1e-9;
 % First, test if we can jump directly to u_final
 g_next = g_fun (u_final, ya, ystd);
 condi_prob = mean (g_next ./ g_curr);
-if condi_prob > p0,
+if condi_prob > p0
     uu_median = u_final;
     return;
 end
 
 % Second, change p0 if we're close to the final threshold
 % (note: this is not explained in arXiv:1601.02557v1... is it really useful ?)
-if condi_prob > p0 ^ 2,
+if condi_prob > p0 ^ 2
     p0 = sqrt (condi_prob);
 end
 
@@ -114,7 +114,9 @@ while (prop_u - prop_l) > theta
     condi_uu = mean (g_next ./ g_curr);
     
     count_iter = count_iter + 1;
-    if count_iter == 500, keyboard, end
+    if count_iter == 5000
+        error ('There''s something quite unreasonable going on here.')
+    end
 end
 
 end % function

@@ -73,7 +73,9 @@ N_mean = mu - alpha .* sd;
 N_var  = (sd .^ 2) .* (1 - alpha .^ 2 - normC .* (bpb - apa));
 N_std  = sqrt (N_var);
 
-if any (isnan (N_std)), keyboard; end
+if any (isnan (N_std))
+    error ('We have some NaNs here, that''s probably not a good sign.')
+end
 
 TN = struct(                                            ...
     'dim', dim, 'mu', mu, 'sd', sd, 'xL', xL, 'xU', xU, ...
@@ -82,3 +84,5 @@ TN = struct(                                            ...
 TN = class (TN, 'TruncatedNormalDistribution');
 
 end % function
+
+%#ok<*OOPS>

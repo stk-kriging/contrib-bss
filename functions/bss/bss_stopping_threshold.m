@@ -28,7 +28,7 @@
 
 function thresh = bss_stopping_threshold (final_stage, squaredCoV, eta, beta)
 
-if final_stage,
+if final_stage
     
     % Our stopping threshold at the last stage is proportional to (an
     % estimation of) the coefficient of variation of our SMC estimate of

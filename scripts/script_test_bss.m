@@ -28,7 +28,7 @@
 %    You should  have received  a copy  of the  GNU Lesser General Public
 %    License along with BSS;  if not, see <http://www.gnu.org/licenses/>.
 
-clear all; close all; clc
+clear;  close all;  clc
 
 % UNCOMMENT THIS FOR REPRODUCIBLE TESTS IN MATLAB
 % s = RandStream ('mt19937ar', 'Seed', 0);
@@ -76,4 +76,4 @@ for k = 1:length(LIST_CASES)
     fprintf('ratio=%.2e  ', result(k).pf_estim / result(k).pf_ref);
     fprintf('\n');
     
-end
+end % function

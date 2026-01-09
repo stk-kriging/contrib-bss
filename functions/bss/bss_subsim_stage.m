@@ -35,7 +35,7 @@ xt = mcs.xt;
 yt = mcs.yt;
 final_stage = false;  % is it the final stage ?
 
-if stage == 1,
+if stage == 1
     Pf_base = 1.00;
     sig_RW = [];
 else
@@ -54,7 +54,7 @@ if (p1 > options.p0 ^ 2) && (p1 < options.p0)
     u_target = quantile(yt, 1 - sqrt(p1));
 end
 
-if u_target >= problem.u_final,
+if u_target >= problem.u_final
     u_target = problem.u_final;
     final_stage = true;
 end

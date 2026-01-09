@@ -55,6 +55,8 @@ U = class (U, 'UniformDistribution');
 
 end % function
 
+%#ok<*OOPS>
+
 %!test U = UniformDistribution ();
 %!test U = UniformDistribution (1, 3);
 %!test U = UniformDistribution ([0 0], [1 2]);

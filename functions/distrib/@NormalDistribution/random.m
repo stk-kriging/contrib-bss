@@ -28,7 +28,7 @@ function x = random (N, samplesize)
 
 A = diag (N.sd);
 
-if nargin < 2,
+if nargin < 2
     
     x = N.mu + (randn (1, N.dim)) * A;
     

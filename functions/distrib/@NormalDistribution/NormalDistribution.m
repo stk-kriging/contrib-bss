@@ -27,23 +27,23 @@
 function N = NormalDistribution (mu, sd)
 
 if nargin == 0
-    
+
     dim = 1;
     mu = 0;
     sd = 1;
-    
+
 else
-    
+
     dim = size (mu, 2);
-    
+
     if ~ isequal (size (mu), [1 dim])
         error('Incorrect size for argument mu.');
     end
-    
+
     if ~ isequal (size (sd), [1 dim])
         error('Incorrect size for argument sd.');
     end
-    
+
 end
 
 N = struct ('dim', dim, 'mu', mu, 'sd', sd);
@@ -51,3 +51,5 @@ N = struct ('dim', dim, 'mu', mu, 'sd', sd);
 N = class (N, 'NormalDistribution');
 
 end % function
+
+%#ok<*OOPS>
