@@ -2,7 +2,7 @@
 
 % Copyright Notice
 %
-%    Copyright (C) 2021, 2022, 2025 CentraleSupelec
+%    Copyright (C) 2021, 2022, 2026 CentraleSupelec
 %
 %    Author:  Julien Bect  <julien.bect@centralesupelec.fr>
 
@@ -34,34 +34,23 @@ end
 
 m = stk_mlint_all_ (root);
 
-% Linter messages that trigger a global error
-% (this list will be growing progressively)
-critical_errors = {'AGROW', 'DISPLAY', 'EXIST', 'ISCLSTR', 'ISMT', 'MINV', 'MSNU', 'NASGU', ...
-    'NBRAK2', 'NCOMMA', 'NOPAR', 'NOPAR2', 'NOPRT', 'NOSEL', 'RESWD', ...
-    'SPERR', 'STREMP', 'STRIN', 'STTOK', 'TRYNC', 'UNRCH'};
-
-b_ok = ~ any (ismember ({m.id}, critical_errors));
+b_ok = isempty (m);
 
 % Summarize all linter warnings
-fprintf ('\n\nSUMMARY:\n')
-[msg, ~, ic] = unique ({m.id});
-for k = 1:(length (msg))
-    if ismember (msg{k}, critical_errors)
-        s_crit = ' [CRITICAL]';
-    else
-        s_crit = '';
+fprintf ('\n\nSUMMARY:')
+if b_ok
+    fprintf (' CLEAR!\n\n')
+else
+    fprintf ('\n');
+    [msg, ~, ic] = unique ({m.id});
+    for k = 1:(length (msg))
+        fprintf ('% 3d %s\n', sum (ic == k), msg{k});
     end
-    fprintf ('% 3d %s%s\n', sum (ic == k), msg{k}, s_crit);
-end
 
-% Display critical errors separately
-if ~ b_ok
+    % Display critical errors separately
     fprintf ('\n\n CRITICAL ERRORS:\n\n');
     for i = 1:(length (m))
-        if ismember (m(i).id, critical_errors)
-            disp (m(i));
-            fprintf ('\n');
-        end
+        disp (m(i));
     end
 end
 

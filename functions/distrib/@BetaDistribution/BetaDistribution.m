@@ -51,3 +51,5 @@ distrib = struct ('dim', dim, 'alpha', alpha, 'beta', beta);
 distrib = class (distrib, 'BetaDistribution');
 
 end % function
+
+%#ok<*OOPS>

@@ -81,23 +81,23 @@ mcs.yt = feval (problem.cost_fun, mcs.xt);    % "cheating" (visu only)
 mcs.gx = ones (options.samplesize, 1);        % relative weights
 mcs.u_base = -Inf;                            % base threshold
 
-if options.use_gp,  % Specific inits for bss
-    
-    if nargin < 3,
+if options.use_gp  % Specific inits for bss
+
+    if nargin < 3
         [x0, y0] = bss_initial_design (problem);
     end
-    
+
     % Initial design
     obs = struct ('xi', x0, 'yi', y0);
-    
+
     % Estimate covariance parameters on the initial dataset
     model = options.model;
     model.param = stk_param_estim (options.model, x0, y0);
-    
-elseif nargin > 2,
-    
+
+elseif nargin > 2
+
     warning ('Input arguments x0 and y0 are ignored in SubSim mode.');
-    
+
 end
 
 stage = 0;  final_stage = false;  stage_data = struct ();
@@ -106,30 +106,30 @@ stage = 0;  final_stage = false;  stage_data = struct ();
 % MAIN LOOP %
 %%%%%%%%%%%%%
 
-while ~ final_stage,
-    
+while ~ final_stage
+
     % a new stage begins !
     stage = stage + 1;
     stage_data(stage).u_base = mcs.u_base;
     stage_data(stage).u_target = [];
-    
+
     fprintf('\n\n####################\n');
     fprintf('##    stage %2d    ##\n', stage);
     fprintf('####################\n\n');
     fprintf('base threshold = %.3f\n\n', mcs.u_base);
-    
-    if options.use_gp,
-        
+
+    if options.use_gp
+
         [obs, mcs, model, stage_data, final_stage] = bss_stage ...
             (stage, obs, mcs, model, stage_data, problem, options);
-        
+
     else
-        
+
         [mcs, stage_data, final_stage] = bss_subsim_stage ...
             (stage, mcs, stage_data, problem, options);
-        
+
     end
-    
+
 end
 
 end % function bss %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -154,7 +154,7 @@ final_stage = false;  % is it the final stage ?
 
 u_target = [];
 
-if stage == 1,
+if stage == 1
     Pf_base = 1.00;
     sig_RW = [];
     squaredCoV_prev = 0;
@@ -164,7 +164,7 @@ else
     squaredCoV_prev = stage_data(stage - 1).squaredCoV;
 end
 
-if ~ options.update_inside_SUR_loop,
+if ~ options.update_inside_SUR_loop
     % update parameters once, before entering the SUR loop
     model.param = stk_param_estim (options.model, xi, yi);
     % TODO: try several starting points ?
@@ -189,29 +189,29 @@ idx_added = [];
 
 k = 0;
 
-while k < options.SUR.max_eval_per_stage,
-    
+while k < options.SUR.max_eval_per_stage
+
     % PREDICTIONS ON THE MONTE CARLO SAMPLING POINTS %%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
     yp_sample = stk_predict(model, xi, yi, xt);
     yp_sample = [yp_sample ...
         stk_dataframe(sqrt(yp_sample.var), {'std'})];
-    
+
     % UPDATE TARGET THRESHOLD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    if ~final_stage,
-        
+
+    if ~final_stage
+
         % At the final stage, u_target = u_final.
         % Otherwise, u_target is a moving target !
         [u_target, g_next] = bss_select_next_threshold ...
             (yp_sample, gx, options.p0, u_target, problem.u_final);
         final_stage = (u_target == problem.u_final);
-        
+
     end
-    
+
     stage_history.u_target(end+1) = u_target;
     stage_history.u_final(end+1)  = problem.u_final;
-    
+
     if final_stage
         fprintf('>>> final stage !  ==>  ');
         fprintf('u_target is now locked to u_final = %.3f.\n', u_target);
@@ -220,9 +220,9 @@ while k < options.SUR.max_eval_per_stage,
         fprintf('  <  u_final = %.3f\n', problem.u_final);
         assert(u_target < problem.u_final);
     end
-    
+
     % THRESHOLD EXCEEDANCE PROBABILITIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
     % Current estimate of the proba of exceeding u_target
     %  (u_target is the level we currently trying to reach)
     [q_excess, p_excess] = stk_distrib_normal_cdf ...
@@ -230,52 +230,52 @@ while k < options.SUR.max_eval_per_stage,
     p_misclass = min (p_excess, q_excess);
     Pf_target_estim = mean(p_excess ./ gx) * Pf_base;
     fprintf ('>>> Pf_target_estim = %.3e\n', Pf_target_estim);
-    
+
     % Current estimate of the proba of exceeding u_final
     %  (u_final is the final target level)
     [~, ggg_final] = stk_distrib_normal_cdf ...
         (problem.u_final, yp_sample.mean, yp_sample.std);
     Pf_final_estim = (mean (ggg_final ./ gx)) * Pf_base;
     fprintf ('>>> (Pf_final_estim = %.3e)\n', Pf_final_estim);
-    
+
     % ERROR ESTIMATES FOR THE TARGET THRESHOLD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
     % We use a recurrence relation on the (squared) coefficient of variation.
-    
+
     % Squared coefficient of variation for the ratio
     %   alphaBSS_t / alphaBSS_{t-1}
     squaredCoV_incr = (Pf_base / Pf_target_estim)^2 ...
         * var(g_next ./ gx) / length(gx);
-    
+
     % Squared coefficient of variation for alphaBSS_t
     squaredCoV = squaredCoV_incr + (1 + squaredCoV_incr) * squaredCoV_prev;
     fprintf ('>>> Estimated CoV = %.2f%%\n', sqrt (squaredCoV) * 100);
-    
+
     integratedPMisclass = Pf_base * (mean (p_misclass ./ gx));
     relativeIntegratedPMisclass = integratedPMisclass / Pf_target_estim;
     fprintf ('>>> Relative integrated PMisclass (RIPM) = %.2f%%\n', ...
         relativeIntegratedPMisclass * 100);
-    
+
     % STOPPING CRITERION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
     % A measure of the relative error induced by the use of a GP model
     %   about the probability at the target level (u_target)
     stopping_crit = relativeIntegratedPMisclass;
-    
+
     % Compute the stopping threshold for the current stage
     stopping_thresh = options.stopping_thresh ...
         (stage, final_stage, squaredCoV);
-    
+
     % COMPUTE THE SAMPLING CRITERION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    [J, yp, stop_flag] = J_SUR_trick ...
+
+    [J, ~, stop_flag] = J_SUR_trick ...
         (model, xi, yi, xt, 1 ./ gx, u_target, options.SUR);
-    
+
     % note: we could save some computation time by moving this AFTER the block
     % "DECIDE IF WE KEEP ADDING POINTS" but we would lose some figures
-    
+
     % SAVE SOME INTRA-STAGE HISTORY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
     stage_history.Pf_target_estim(k + 1)     = Pf_target_estim;
     stage_history.Pf_final_estim(k + 1)      = Pf_final_estim;
     stage_history.squaredCoV(k + 1)          = squaredCoV;
@@ -283,29 +283,29 @@ while k < options.SUR.max_eval_per_stage,
     stage_history.averagePMisclass(k + 1)    = mean(p_misclass);
     stage_history.stopping_crit(k + 1)       = stopping_crit;
     stage_history.stopping_thresh(k + 1)     = stopping_thresh;
-    
+
     % FIGURES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    if ~ options.figs.disable_all,
-        
+
+    if ~ options.figs.disable_all
+
         % FIXME: Make it possible to disable figures selectively
-        
-        if k == 0,
-            
+
+        if k == 0
+
             % previous design points + new sample points (without threshold)
             bss_figure(21, options.figs, xt, xi, [], ...
                 [stage_data(1:stage-1).u_target], [], ...
                 problem, stage, []);
             drawnow;
-            
+
             % previous design points + new sample points (with a threshold)
             bss_figure(21, options.figs, xt, xi, [], ...
                 [stage_data(1:stage-1).u_target], u_target, ...
                 problem, stage, Pf_target_estim);
             drawnow;
-            
+
         end
-        
+
         %%% Intra-stage history
         % bss_figure (26, options.figs, stage_history);  % probabilities
         % bss_figure (25, options.figs, stage_history);  % thresholds
@@ -313,17 +313,17 @@ while k < options.SUR.max_eval_per_stage,
         % bss_figure (50, options.figs, stage_history);  % pmisclass
         % bss_figure (27, options.figs, stage_history);  % stopping criterion
         % drawnow;
-        
+
         %%% Specialized 2D plots
         % bss_figure (23, options.figs, xt, J);           % sampling crit
         % bss_figure (24, options.figs, xt, yp);          % predictor
         % bss_figure (28, options.figs, xt, p_misclass);  % pmisclass
         % drawnow;
-        
+
     end
-    
+
     % DECIDE IF WE KEEP ADDING POINTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
     % Forced stopping if we cannot compute the SUR criterion
     fprintf ('>>> SUR stop_flag = %d  ', stop_flag);
     b0 = (stop_flag > 0);
@@ -332,7 +332,7 @@ while k < options.SUR.max_eval_per_stage,
     else
         fprintf (' [CAN CONTINUE]\n');
     end
-    
+
     % First stopping condition: RIPM must be low enough
     fprintf ('>>> stopping_crit(RIPM)=%.2f%%  ', stopping_crit * 100);
     b1 = (stopping_crit <= stopping_thresh);
@@ -341,7 +341,7 @@ while k < options.SUR.max_eval_per_stage,
     else
         fprintf ('>  stopping_thresh=%.2f%%  [MUST CONTINUE]\n', stopping_thresh * 100);
     end
-    
+
     % Second stopping condition: k >= k_min
     k_min = options.SUR.min_eval_per_stage;
     b2 = (k >= k_min);
@@ -350,7 +350,7 @@ while k < options.SUR.max_eval_per_stage,
     else
         fprintf ('>>> k=%d < k_min=%d [MUST CONTINUE]\n', k, k_min);
     end
-    
+
     if b0 || (b1 && b2)
         fprintf ('>>>   --> all stopping condition are satisfied,\n');
         fprintf ('>>>   --> stop adding evaluation points.\n');
@@ -361,78 +361,77 @@ while k < options.SUR.max_eval_per_stage,
         fprintf ('>>>   --> at least one stopping condition is not satisfied,\n');
         fprintf ('>>>   --> pick a new evaluation point\n');
     end
-    
+
     % PICK A NEW EVALUATION POINT & EVALUATE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
     [ignore_JJ_min, I_new] = min (J); %#ok<ASGLU>
-    
-    if ismember (xt(I_new, :), xi, 'rows'),
-        warning('This point has already been evaluated.'); %#ok<WNTAG>
-        keyboard; break;
+
+    if ismember (xt(I_new, :), xi, 'rows')
+        error ('This point has already been evaluated.');
     end
-    
+
     % Indices of all the points (in xt) selected during this stage
     idx_added = [idx_added; I_new];
-    
+
     xi = [xi; xt(I_new, :)];
     yi = [yi; yt(I_new, :)];
-    
+
     % youplaboum, we have one more evaluation in store
     nb_evals = size(xi, 1);
     assert(isequal(size(xi), [nb_evals problem.dim]));
     assert(isequal(size(yi), [nb_evals 1]));
-    
+
     % FIGURES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    if ~ options.figs.disable_all,
-        
+
+    if ~ options.figs.disable_all
+
         %%% Predicted f versus true f
         % bss_figure (14, options.figs, ...
         %    yi, yt, yp, [stage_data(1:(stage-1)).u_target],  ...
         %    u_target);
-        
+
         %%% PExcess versus true f
         % bss_figure (15, options.figs, ...
         %    yt, p_excess, idx_added, u_target);
-        
+
         bss_figure(21, options.figs, xt, xi, idx_added, ...
             [stage_data(1:stage-1).u_target], u_target, problem, stage, ...
             Pf_target_estim);
-        
+
         drawnow;
-        
+
     end
-    
+
     % UPDATE PARAMETERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    if options.update_inside_SUR_loop,
+
+    if options.update_inside_SUR_loop
         % update parameters once, before entering the SUR loop
         model.param = stk_param_estim (options.model, xi, yi);
     end
-    
+
     k = k + 1;
-    
+
     fprintf ('>>> nb_evals = %d ', nb_evals);
     fprintf ('(stage=%d, k=%d)\n\n', stage, k);
-    
+
 end % while (k <= options.SUR.max_eval_per_stage)
 
 % FIGURES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if ~ options.figs.disable_all,
-    
+if ~ options.figs.disable_all
+
     bss_figure (21, options.figs, xt, xi, [], ...
         [stage_data(1:stage-1).u_target], u_target, problem, stage, ...
         Pf_target_estim); drawnow;
-    
+
     bss_figure (220, options.figs, xt, xi, idx_added, ...
         [stage_data(1:stage-1).u_target], u_target, problem, stage, ...
         Pf_target_estim); drawnow;
-    
+
     bss_figure (221, options.figs, xt, xi, idx_added, ...
         [stage_data(1:stage-1).u_target], u_target, problem, stage, ...
         Pf_target_estim); drawnow;
-    
+
 end
 
 % Update the threshold %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -440,17 +439,17 @@ end
 fprintf ('\n[[stage %d, updating threshold]]\n', stage);
 
 % target threshold
-if ~ final_stage, % update if we're not at the final stage
+if ~ final_stage % update if we're not at the final stage
     fprintf (['>>> The current threshold (stage %d) has been ' ...
         'updated.\n'], stage);
     fprintf (['>>> === SUR was ran using the temporary threshold' ...
         '%.3f.\n'], u_target);
-    
+
     [u_target, g_next] = bss_select_next_threshold ...
         (yp_sample, gx, options.p0, u_target, problem.u_final);
-    
+
     final_stage = (u_target == problem.u_final);
-    
+
     fprintf (['>>> === The next sample will be simulated using the ' ...
         'updated threshold u_target = %.3f.\n'], u_target);
 end
@@ -462,7 +461,7 @@ stage_data(stage).u_target = u_target;
 fprintf('\n[[stage %d, updating Pf estimate...]]\n', stage);
 
 % the estimate the product of all stagewise estimated ratios
-if final_stage,
+if final_stage
     [~, ggg] = stk_distrib_normal_cdf (problem.u_final, yp_sample.mean, yp_sample.std);
 else
     ggg = g_next;

@@ -60,7 +60,7 @@ for k = 1 : options.MH.nb_steps
     x2 = x1 + bsxfun (@times, randn (size (x1)), sig_RW);
     
     % Check domains
-    if ~ all (is_inside_support (input_distrib, x1)),
+    if ~ all (is_inside_support (input_distrib, x1))
         error ('This should never happen !');
     end
     b2 = is_inside_support (input_distrib, x2);
@@ -105,7 +105,7 @@ for k = 1 : options.MH.nb_steps
     % Copy accepted proposals
     x1(a, :) = x2(a, :);
     y1(a, :) = y2(a, :);
-    if options.use_gp,
+    if options.use_gp
         g1(a) = g2(a);
     end
     
