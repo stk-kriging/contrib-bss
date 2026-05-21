@@ -53,7 +53,7 @@ warning('OFF', 'STK:stk_predict:NegativeVariancesSetToZero');
 
 tic;
 
-stage_data = bss (problem, options);
+[stage_data, obs] = bss (problem, options);
 
 fprintf ('Pf_estimate = %.3e\n', stage_data(end).Pf);
 fprintf ('Pf_true = %.3e\n ', problem.Pf_true);

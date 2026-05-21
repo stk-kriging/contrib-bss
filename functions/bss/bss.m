@@ -54,7 +54,7 @@
 %    You should  have received  a copy  of the  GNU Lesser General Public
 %    License along with BSS;  if not, see <http://www.gnu.org/licenses/>.
 
-function stage_data = bss (problem, options, x0, y0)
+function [stage_data, obs] = bss (problem, options, x0, y0)
 
 options = bss_get_default_options (options, problem);
 
@@ -94,10 +94,14 @@ if options.use_gp  % Specific inits for bss
     model = options.model;
     model.param = stk_param_estim (options.model, x0, y0);
 
-elseif nargin > 2
+else % Subset simulation
 
-    warning ('Input arguments x0 and y0 are ignored in SubSim mode.');
+    % No need for that in plain subset simulation
+    obs = [];
 
+    if nargin > 2
+        warning ('Input arguments x0 and y0 are ignored in SubSim mode.');
+    end
 end
 
 stage = 0;  final_stage = false;  stage_data = struct ();
