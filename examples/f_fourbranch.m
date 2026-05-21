@@ -33,10 +33,21 @@
 %
 %    License: CC0  <http://creativecommons.org/publicdomain/zero/1.0/>
 
-function z = f_fourbranch (x)
+function z = f_fourbranch (x1, x2)
+
+dim = 2;
+
+switch nargin
+    case 1
+        x = x1;
+    case dim
+        x = [x1(:) x2(:)];
+    otherwise
+        error ('Incorrect number of input arguments');
+end
 
 n = size (x, 1);
-assert (isequal (size (x), [n 2]));
+assert (isequal (size (x), [n dim]));
 
 x = double (x);
 

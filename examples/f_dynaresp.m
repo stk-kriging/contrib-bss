@@ -46,7 +46,8 @@ switch nargin
         error ('Incorrect number of input arguments');
 end
 
-assert (size(x, 2) ~= dim);
+n = size (x, 1);
+assert (isequal (size (x), [n dim]));
 
 M  = x(:, 1);
 C1 = x(:, 2);
