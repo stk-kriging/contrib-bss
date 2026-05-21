@@ -380,6 +380,8 @@ while k < options.SUR.max_eval_per_stage
     xi = [xi; xt(I_new, :)];
     yi = [yi; yt(I_new, :)];
 
+    obs = struct('xi', xi, 'yi', yi);
+
     % youplaboum, we have one more evaluation in store
     nb_evals = size(xi, 1);
     assert(isequal(size(xi), [nb_evals problem.dim]));
@@ -494,8 +496,6 @@ g_next = g_fun(u_target, yp_sample.mean, yp_sample.std);
 % Reweight/resample
 nb_replicates = residual_resampling (g_next ./ gx);
 xt_1 = replicate_particles (xt, nb_replicates);
-
-obs = struct('xi', xi, 'yi', yi);
 
 [mcs, accept_rate, sig_RW] = bss_move ...
     (xt_1, obs, model, u_target, options, problem, sig_RW);
