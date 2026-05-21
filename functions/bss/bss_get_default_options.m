@@ -68,6 +68,11 @@ if (~ isfield (options, 'model')) || (isempty (options.model))
     % note: we do not provide an automatic prior for the covariance parameters
 end
 
+% BAYES-ONLY: model parameters estimation method
+if (~ isfield (options, 'param_estim')) || (isempty (options.param_estim))
+    options.param_estim = @stk_param_estim;
+end
+
 % BAYES-ONLY: SUR parameters
 if ~ isfield (options, 'SUR')
     options.SUR = [];
